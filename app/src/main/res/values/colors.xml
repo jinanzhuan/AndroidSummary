@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="red">#ffff0000</color>
+    <color name="white">#feffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="transparent">@android:color/transparent</color>
+
+    <color name="toolbar_color_title">@color/black</color>
+    <color name="toolbar_color_title_right">@color/black</color>
+
+    <color name="common_item_color">@color/black</color>
+    <color name="gray_normal">#666667</color>
+</resources>
