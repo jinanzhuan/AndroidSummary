@@ -21,6 +21,10 @@
         <!--三方库首页-->
         <activity android:name=".libraries.LibrariesIndexActivity" />
         <activity android:name=".libraries.Glide.RoundGlideActivity" />
+        <activity android:name=".android.AndroidIndexActivity" />
+        <activity android:name=".android.widget.WidgetIndexActivity" />
+        <activity android:name=".android.widget.recyclerview.HorizontalPageActivity" />
+        <activity android:name=".android.widget.recyclerview.RecyclerViewIndexActivity" />
     </application>
 
 </manifest>

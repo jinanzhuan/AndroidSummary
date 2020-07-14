@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.androidsummary.common.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_title_bar_height"
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarTitle="android"/>
+
+    <TextView
+        android:id="@+id/tv_widget_relation"
+        style="@style/item_tv_style"
+        android:onClick="widgetRelation"
+        android:text="widget"/>
+
+    <TextView
+        android:id="@+id/tv_animation_relation"
+        style="@style/item_tv_style"
+        android:onClick="animationRelation"
+        android:text="animation"/>
+
+</LinearLayout>

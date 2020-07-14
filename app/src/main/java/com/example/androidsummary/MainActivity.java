@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.androidsummary.android.AndroidIndexActivity;
 import com.example.androidsummary.base.BaseTitleActivity;
 import com.example.androidsummary.libraries.LibrariesIndexActivity;
 
@@ -16,7 +17,7 @@ public class MainActivity extends BaseTitleActivity {
     }
 
     public void androidRelation(View view) {
-
+        AndroidIndexActivity.actionStart(mContext);
     }
 
     public void javaRelation(View view) {
