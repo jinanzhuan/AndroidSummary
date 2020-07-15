@@ -4,35 +4,54 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.androidsummary.common.CommonUtils;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Sunny on 2019/4/1.
  * 参考博文：https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
 public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager implements PageDecorationLastJudge {
+    private int totalHeight = 0;
+    private int totalWidth = 0;
+    private int offsetY = 0;
+    private int offsetX = 0;
+    private int rows = 0;
+    private int columns = 0;
+    private int pageSize = 0;
+    private int itemWidth = 0;
+    private int itemHeight = 0;
+    private int onePageSize = 0;
+    private int itemWidthUsed;
+    private int itemHeightUsed;
+    private int itemDefaultHeight;
+
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-        return null;
+        return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
-
-    int totalHeight = 0;
-    int totalWidth = 0;
-    int offsetY = 0;
-    int offsetX = 0;
 
     public HorizontalPageLayoutManager(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
         this.onePageSize = rows * columns;
     }
+    
+    public void setItemDefaultHeight(int height) {
+        itemDefaultHeight = height;
+        Log.e("TAG", "itemDefaultHeight = "+height);
+    }
 
     @Override
     public boolean canScrollHorizontally() {
         return true;
     }
-
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
@@ -57,22 +76,30 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
     }
 
     private int getUsableHeight() {
+        Log.e("TAG", "getHeight() = "+getHeight());
         return getHeight() - getPaddingTop() - getPaddingBottom();
     }
 
-    int rows = 0;
-    int columns = 0;
-    int pageSize = 0;
-    int itemWidth = 0;
-    int itemHeight = 0;
-    int onePageSize = 0;
-    int itemWidthUsed;
-    int itemHeightUsed;
+    @Override
+    public void onMeasure(@NonNull RecyclerView.Recycler recycler, @NonNull RecyclerView.State state, int widthSpec, int heightSpec) {
+        int heightMode = View.MeasureSpec.getMode(heightSpec);
+        if(heightMode == View.MeasureSpec.AT_MOST && itemDefaultHeight > 0) {
+           heightSpec = View.MeasureSpec.makeMeasureSpec(getMeasureHeight(), View.MeasureSpec.EXACTLY);
+        }
+        View view = recycler.getViewForPosition(0);
+        super.onMeasure(recycler, state, widthSpec, heightSpec);
+    }
 
+    private int getMeasureHeight() {
+        int itemCount = getItemCount();
+        if(itemCount * 1.0f / columns > rows - 1) {
+            return itemDefaultHeight * rows;
+        }
+        return (int) (itemDefaultHeight * Math.floor(itemCount * 1.0f / columns));
+    }
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-
         if (getItemCount() == 0) {
             removeAndRecycleAllViews(recycler);
             return;
@@ -87,15 +114,12 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         //计算宽高已经使用的量，主要用于后期测量
         itemWidthUsed = (columns - 1) * itemWidth;
         itemHeightUsed = (rows - 1) * itemHeight;
-
+        int maxUsed = Math.max(itemWidthUsed, itemHeightUsed);
         //计算总的页数
 
-//        pageSize = state.getItemCount() / onePageSize + (state.getItemCount() % onePageSize == 0 ? 0 : 1);
         computePageSize(state);
-        Log.i("zzz", "itemCount=" + getItemCount() + " state itemCount=" + state.getItemCount() + " pageSize=" + pageSize);
         //计算可以横向滚动的最大值
         totalWidth = (pageSize - 1) * getWidth();
-
         //分离view
         detachAndScrapAttachedViews(recycler);
 
@@ -111,14 +135,20 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                         p = pageSize;
                         break;
                     }
-
                     View view = recycler.getViewForPosition(index);
                     addView(view);
                     //测量item
-                    measureChildWithMargins(view, itemWidthUsed, itemHeightUsed);
+                    measureChildWithMargins(view, maxUsed, maxUsed);
 
                     int width = getDecoratedMeasuredWidth(view);
                     int height = getDecoratedMeasuredHeight(view);
+                    if(height < itemHeight) {
+                        height = itemHeight;
+                        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                        layoutParams.height = itemHeight;
+                        layoutParams.width = width;
+                    }
+                    Log.e("TAG", "width = "+width + " height = "+height);
                     //记录显示范围
                     Rect rect = allItemFrames.get(index);
                     if (rect == null) {
@@ -154,7 +184,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         if (state.isPreLayout()) {
             return;
         }
-
         Rect displayRect = new Rect(getPaddingLeft() + offsetX, getPaddingTop(), getWidth() - getPaddingLeft() - getPaddingRight() + offsetX, getHeight() - getPaddingTop() - getPaddingBottom());
         Rect childRect = new Rect();
         for (int i = 0; i < getChildCount(); i++) {
@@ -180,7 +209,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
 
     }
 
-
     @Override
     public boolean isLastRow(int index) {
         if (index >= 0 && index < getItemCount()) {
@@ -190,7 +218,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                 return true;
             }
         }
-
         return false;
     }
 

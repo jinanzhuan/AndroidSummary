@@ -11,10 +11,18 @@
         app:titleBarDisplayHomeAsUpEnabled="true"
         app:titleBarTitle="HorizontalPage"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_horizontal_page"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/colorPrimary"/>
+        android:layout_height="wrap_content">
+
+        <com.example.androidsummary.android.widget.recyclerview.horizontalpage.EaseChatExtendMenu
+            android:id="@+id/rv_horizontal_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:numRows="3"
+            android:background="@color/colorPrimary"/>
+
+    </RelativeLayout>
+
 
 </LinearLayout>

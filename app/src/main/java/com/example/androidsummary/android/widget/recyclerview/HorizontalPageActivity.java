@@ -2,8 +2,7 @@ package com.example.androidsummary.android.widget.recyclerview;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +10,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidsummary.R;
-import com.example.androidsummary.android.widget.recyclerview.horizontalpage.HorizontalPageLayoutManager;
-import com.example.androidsummary.android.widget.recyclerview.horizontalpage.PagingScrollHelper;
+import com.example.androidsummary.android.widget.recyclerview.horizontalpage.EaseChatExtendMenu;
 import com.example.androidsummary.base.BaseTitleActivity;
+import com.example.androidsummary.common.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HorizontalPageActivity extends BaseTitleActivity {
-    private RecyclerView rv_horizontal_page;
+public class HorizontalPageActivity extends BaseTitleActivity implements EaseChatExtendMenu.EaseChatExtendMenuItemClickListener {
+    private EaseChatExtendMenu extendMenu;
     private List<String> names = new ArrayList<>();
     private HorizontalAdapter adapter;
 
@@ -39,29 +39,47 @@ public class HorizontalPageActivity extends BaseTitleActivity {
     @Override
     protected void initView() {
         super.initView();
-        rv_horizontal_page = findViewById(R.id.rv_horizontal_page);
+        extendMenu = findViewById(R.id.rv_horizontal_page);
+        Log.e("TAG", "screenWidth = "+ CommonUtils.getScreenInfo(mContext)[0]);
+//        PagingScrollHelper helper = new PagingScrollHelper();
+//        //LinearLayoutManager manager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
+//        HorizontalPageLayoutManager manager = new HorizontalPageLayoutManager(2, 4);
+//        rv_horizontal_page.setHasFixedSize(true);
+//        rv_horizontal_page.setLayoutManager(manager);
+//        adapter = new HorizontalAdapter();
+//        rv_horizontal_page.setAdapter(adapter);
+//
+//        helper.setUpRecycleView(rv_horizontal_page);
+//        helper.updateLayoutManger();
+//        helper.scrollToPosition(0);
+//        rv_horizontal_page.setHorizontalFadingEdgeEnabled(true);
 
-        PagingScrollHelper helper = new PagingScrollHelper();
-        HorizontalPageLayoutManager manager = new HorizontalPageLayoutManager(2, 4);
-        rv_horizontal_page.setHasFixedSize(true);
-        rv_horizontal_page.setLayoutManager(manager);
-        adapter = new HorizontalAdapter();
-        rv_horizontal_page.setAdapter(adapter);
-
-        helper.setUpRecycleView(rv_horizontal_page);
-        helper.updateLayoutManger();
-        helper.scrollToPosition(0);
-        rv_horizontal_page.setHorizontalFadingEdgeEnabled(true);
+        LinearLayoutManager
+        extendMenu.init();
+        extendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, 0, this);
+        extendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, 1, this);
+        extendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, 2, this);
+        extendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, 3, this);
+        extendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, 4, this);
+        extendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, 5, this);
+        extendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, 6, this);
+        extendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, 7, this);
+        extendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, 8, this);
 
     }
 
     @Override
     protected void initData() {
         super.initData();
-        for(int i = 0; i < 30; i++) {
-            names.add("test"+(i+1));
-        }
-        adapter.setData(names);
+//        for(int i = 0; i < 30; i++) {
+//            names.add("test"+(i+1));
+//        }
+//        adapter.setData(names);
+    }
+
+    @Override
+    public void onChatExtendMenuItemClick(int itemId, View view) {
+        Toast.makeText(HorizontalPageActivity.this, "itemId = "+itemId, Toast.LENGTH_SHORT).show();
     }
 
     private class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.ViewHolder> {
@@ -75,13 +93,8 @@ public class HorizontalPageActivity extends BaseTitleActivity {
         @NonNull
         @Override
         public HorizontalAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            TextView tv = new TextView(mContext);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            tv.setLayoutParams(params);
-            tv.setGravity(Gravity.CENTER);
-            tv.setBackgroundColor(Color.GRAY);
-            tv.setTextSize(16);
-            return new ViewHolder(tv);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_layout_horizontal_page, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
@@ -105,7 +118,7 @@ public class HorizontalPageActivity extends BaseTitleActivity {
             private TextView tvName;
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                tvName = (TextView) itemView;
+                tvName = itemView.findViewById(R.id.tv_name);
             }
         }
     }

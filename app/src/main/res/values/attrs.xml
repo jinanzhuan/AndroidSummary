@@ -11,4 +11,9 @@
         <attr name="titleBarRightVisible" format="boolean"/>
         <attr name="titleBarDisplayHomeAsUpEnabled" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="EaseChatExtendMenu">
+        <attr name="numColumns" format="integer"/>
+        <attr name="numRows" format="integer"/>
+    </declare-styleable>
 </resources>

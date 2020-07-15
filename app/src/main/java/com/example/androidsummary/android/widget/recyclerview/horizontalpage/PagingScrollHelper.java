@@ -14,27 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Sunny on 2019/4/1.
  * 参考博文：https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
- 
 public class PagingScrollHelper {
- 
     RecyclerView mRecyclerView = null;
- 
-    private MyOnScrollListener mOnScrollListener = new MyOnScrollListener();
- 
-    private MyOnFlingListener mOnFlingListener = new MyOnFlingListener();
+    private PageOnScrollListener mOnScrollListener = new PageOnScrollListener();
+    private PageOnFlingListener mOnFlingListener = new PageOnFlingListener();
     private int offsetY = 0;
     private int offsetX = 0;
- 
     int startY = 0;
     int startX = 0;
- 
- 
+    ValueAnimator mAnimator = null;
+    private MyOnTouchListener mOnTouchListener = new MyOnTouchListener();
+    private boolean firstTouch = true;
+    private onPageChangeListener mOnPageChangeListener;
+    private ORIENTATION mOrientation = ORIENTATION.HORIZONTAL;
+
     enum ORIENTATION {
         HORIZONTAL, VERTICAL, NULL
     }
- 
-    private ORIENTATION mOrientation = ORIENTATION.HORIZONTAL;
- 
+
     public void setUpRecycleView(RecyclerView recycleView) {
         if (recycleView == null) {
             throw new IllegalArgumentException("recycleView must be not null");
@@ -48,7 +45,6 @@ public class PagingScrollHelper {
         recycleView.setOnTouchListener(mOnTouchListener);
         //获取滚动的方向
         updateLayoutManger();
- 
     }
  
     public void updateLayoutManger() {
@@ -68,9 +64,7 @@ public class PagingScrollHelper {
             startY = 0;
             offsetX = 0;
             offsetY = 0;
- 
         }
- 
     }
  
     /**
@@ -84,17 +78,12 @@ public class PagingScrollHelper {
             if (mOrientation == ORIENTATION.VERTICAL && mRecyclerView.computeVerticalScrollExtent() != 0) {
                 return mRecyclerView.computeVerticalScrollRange() / mRecyclerView.computeVerticalScrollExtent();
             } else if (mRecyclerView.computeHorizontalScrollExtent() != 0) {
-                Log.i("zzz","rang="+mRecyclerView.computeHorizontalScrollRange()+" extent="+mRecyclerView.computeHorizontalScrollExtent());
                 return mRecyclerView.computeHorizontalScrollRange() / mRecyclerView.computeHorizontalScrollExtent();
             }
         }
         return 0;
     }
- 
- 
- 
-    ValueAnimator mAnimator = null;
- 
+
     public void scrollToPosition(int position) {
         if (mAnimator == null) {
             mOnFlingListener.onFling(0, 0);
@@ -113,7 +102,7 @@ public class PagingScrollHelper {
         }
     }
  
-    public class MyOnFlingListener extends RecyclerView.OnFlingListener {
+    public class PageOnFlingListener extends RecyclerView.OnFlingListener {
  
         @Override
         public boolean onFling(int velocityX, int velocityY) {
@@ -191,14 +180,12 @@ public class PagingScrollHelper {
                 mAnimator.cancel();
                 mAnimator.setIntValues(startPoint, endPoint);
             }
- 
             mAnimator.start();
- 
             return true;
         }
     }
  
-    public class MyOnScrollListener extends RecyclerView.OnScrollListener {
+    public class PageOnScrollListener extends RecyclerView.OnScrollListener {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             //newState==0表示滚动停止，此时需要处理回滚
@@ -210,26 +197,20 @@ public class PagingScrollHelper {
                     //如果滑动的距离超过屏幕的一半表示需要滑动到下一页
                     move = absY > recyclerView.getHeight() / 2;
                     vY = 0;
- 
                     if (move) {
                         vY = offsetY - startY < 0 ? -1000 : 1000;
                     }
- 
                 } else {
                     int absX = Math.abs(offsetX - startX);
                     move = absX > recyclerView.getWidth() / 2;
                     if (move) {
                         vX = offsetX - startX < 0 ? -1000 : 1000;
                     }
- 
                 }
- 
                 mOnFlingListener.onFling(vX, vY);
- 
             }
- 
         }
- 
+
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             //滚动结束记录滚动的偏移量
@@ -237,11 +218,7 @@ public class PagingScrollHelper {
             offsetX += dx;
         }
     }
- 
-    private MyOnTouchListener mOnTouchListener = new MyOnTouchListener();
- 
-    private boolean firstTouch = true;
- 
+
     public class MyOnTouchListener implements View.OnTouchListener {
  
         @Override
@@ -256,10 +233,8 @@ public class PagingScrollHelper {
             if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
                 firstTouch = true;
             }
- 
             return false;
         }
- 
     }
  
     private int getPageIndex() {
@@ -288,9 +263,11 @@ public class PagingScrollHelper {
         }
         return p;
     }
- 
-    onPageChangeListener mOnPageChangeListener;
- 
+
+    /**
+     * set page change listener
+     * @param listener
+     */
     public void setOnPageChangeListener(onPageChangeListener listener) {
         mOnPageChangeListener = listener;
     }
