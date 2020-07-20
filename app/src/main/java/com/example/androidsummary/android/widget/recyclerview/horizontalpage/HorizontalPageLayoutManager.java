@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.androidsummary.common.CommonUtils;
-
-import java.util.concurrent.CountDownLatch;
-
 /**
- * Created by Sunny on 2019/4/1.
+ * 本LayoutManager提供了类似ViewPager+GridView的分页效果。
+ * 针对原博文（https://blog.csdn.net/Y_sunny_U/article/details/89500464）做了如下修改：
+ * 1、支持recyclerView高度是wrap_content的情况。
+ * 2、支持主动设置条目的高度{@link #setItemHeight(int)}
  * 参考博文：https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
 public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager implements PageDecorationLastJudge {
@@ -30,7 +29,11 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
     private int onePageSize = 0;
     private int itemWidthUsed;
     private int itemHeightUsed;
-    private int itemDefaultHeight;
+    private int itemSetHeight;
+    private boolean isUseSetHeight;
+    private int heightMode;
+    private SparseArray<Rect> allItemFrames = new SparseArray<>();
+    private int pageMaxHeight;
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -43,9 +46,9 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         this.onePageSize = rows * columns;
     }
     
-    public void setItemDefaultHeight(int height) {
-        itemDefaultHeight = height;
-        Log.e("TAG", "itemDefaultHeight = "+height);
+    public void setItemHeight(int height) {
+        itemSetHeight = height;
+        isUseSetHeight = height > 0;
     }
 
     @Override
@@ -69,33 +72,33 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         return result;
     }
 
-    private SparseArray<Rect> allItemFrames = new SparseArray<>();
-
     private int getUsableWidth() {
         return getWidth() - getPaddingLeft() - getPaddingRight();
     }
 
     private int getUsableHeight() {
-        Log.e("TAG", "getHeight() = "+getHeight());
         return getHeight() - getPaddingTop() - getPaddingBottom();
     }
 
     @Override
     public void onMeasure(@NonNull RecyclerView.Recycler recycler, @NonNull RecyclerView.State state, int widthSpec, int heightSpec) {
-        int heightMode = View.MeasureSpec.getMode(heightSpec);
-        if(heightMode == View.MeasureSpec.AT_MOST && itemDefaultHeight > 0) {
-           heightSpec = View.MeasureSpec.makeMeasureSpec(getMeasureHeight(), View.MeasureSpec.EXACTLY);
+        heightMode = View.MeasureSpec.getMode(heightSpec);
+        if(heightMode == View.MeasureSpec.AT_MOST) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec(itemSetHeight * rows, View.MeasureSpec.EXACTLY);
+            widthSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(widthSpec), View.MeasureSpec.EXACTLY);
+            totalHeight = View.MeasureSpec.getSize(heightSpec);
         }
-        View view = recycler.getViewForPosition(0);
         super.onMeasure(recycler, state, widthSpec, heightSpec);
+        Log.e("TAG", "onMeasure totalHeight = "+totalHeight + " width = "+View.MeasureSpec.getSize(widthSpec));
     }
 
-    private int getMeasureHeight() {
-        int itemCount = getItemCount();
-        if(itemCount * 1.0f / columns > rows - 1) {
-            return itemDefaultHeight * rows;
-        }
-        return (int) (itemDefaultHeight * Math.floor(itemCount * 1.0f / columns));
+    /**
+     * 返回true使用recyclerView的自动测量
+     * @return
+     */
+    @Override
+    public boolean isAutoMeasureEnabled() {
+        return false;
     }
 
     @Override
@@ -111,12 +114,15 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         itemWidth = getUsableWidth() / columns;
         itemHeight = getUsableHeight() / rows;
 
+        //针对高度方向为wrap_content的情况
+        if(itemHeight == 0) {
+            getWrapItemHeight();
+        }
+
         //计算宽高已经使用的量，主要用于后期测量
         itemWidthUsed = (columns - 1) * itemWidth;
         itemHeightUsed = (rows - 1) * itemHeight;
-        int maxUsed = Math.max(itemWidthUsed, itemHeightUsed);
         //计算总的页数
-
         computePageSize(state);
         //计算可以横向滚动的最大值
         totalWidth = (pageSize - 1) * getWidth();
@@ -138,17 +144,19 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                     View view = recycler.getViewForPosition(index);
                     addView(view);
                     //测量item
-                    measureChildWithMargins(view, maxUsed, maxUsed);
+                    measureChildWithMargins(view, itemWidthUsed, itemHeightUsed);
 
                     int width = getDecoratedMeasuredWidth(view);
                     int height = getDecoratedMeasuredHeight(view);
-                    if(height < itemHeight) {
-                        height = itemHeight;
-                        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                        layoutParams.height = itemHeight;
-                        layoutParams.width = width;
+                    //如何设置了条目高度，则使用；没有设置，则使用真实的条目高度作为itemHeight
+                    if(isUseSetHeight) {
+                        height = getWrapItemHeight();
+                        itemHeight = height;
+                    }else {
+                        if(index == 0 && height != 0) {
+                            itemHeight = height;
+                        }
                     }
-                    Log.e("TAG", "width = "+width + " height = "+height);
                     //记录显示范围
                     Rect rect = allItemFrames.get(index);
                     if (rect == null) {
@@ -158,15 +166,35 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                     int y = r * itemHeight;
                     rect.set(x, y, width + x, height + y);
                     allItemFrames.put(index, rect);
-
-
                 }
             }
             //每一页循环以后就回收一页的View用于下一页的使用
             removeAndRecycleAllViews(recycler);
         }
-
         recycleAndFillItems(recycler, state);
+    }
+
+    /**
+     * 获取wrap_content下，条目的高度
+     * @return
+     */
+    private int getWrapItemHeight() {
+        //如果条目高度是wrap_content模式
+        if(heightMode == View.MeasureSpec.AT_MOST) {
+            //如果设置了条目高度，则采用设置的高度
+            if(isUseSetHeight) {
+                //判断设置的条目高度是否超过可用高度
+                if(itemSetHeight * rows <= totalHeight) {
+                    itemHeight = itemSetHeight;
+                }else {
+                    itemHeight = totalHeight / rows;
+                }
+            }else {
+                itemHeight = totalHeight / rows;
+            }
+            return itemHeight;
+        }
+        return itemHeight;
     }
 
     private void computePageSize(RecyclerView.State state) {
@@ -184,7 +212,7 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         if (state.isPreLayout()) {
             return;
         }
-        Rect displayRect = new Rect(getPaddingLeft() + offsetX, getPaddingTop(), getWidth() - getPaddingLeft() - getPaddingRight() + offsetX, getHeight() - getPaddingTop() - getPaddingBottom());
+        Rect displayRect = new Rect(getPaddingLeft() + offsetX, getPaddingTop(), getWidth() - getPaddingLeft() - getPaddingRight() + offsetX, Math.max(getHeight(), pageMaxHeight) - getPaddingTop() - getPaddingBottom());
         Rect childRect = new Rect();
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);

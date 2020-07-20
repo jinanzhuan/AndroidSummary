@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import com.example.androidsummary.R;
 import com.example.androidsummary.android.widget.recyclerview.horizontalpage.EaseChatExtendMenu;
 import com.example.androidsummary.base.BaseTitleActivity;
 import com.example.androidsummary.common.CommonUtils;
+import com.example.androidsummary.common.EaseTitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,6 @@ public class HorizontalPageActivity extends BaseTitleActivity implements EaseCha
 //        helper.scrollToPosition(0);
 //        rv_horizontal_page.setHorizontalFadingEdgeEnabled(true);
 
-        LinearLayoutManager
         extendMenu.init();
         extendMenu.registerMenuItem(R.string.attach_picture, R.drawable.ease_chat_image_selector, 0, this);
         extendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, 1, this);
@@ -66,6 +67,21 @@ public class HorizontalPageActivity extends BaseTitleActivity implements EaseCha
         extendMenu.registerMenuItem(R.string.attach_take_pic, R.drawable.ease_chat_takepic_selector, 7, this);
         extendMenu.registerMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, 8, this);
 
+    }
+
+    @Override
+    protected void initListener() {
+        super.initListener();
+        title_bar.setOnRightClickListener(new EaseTitleBar.OnRightClickListener() {
+            @Override
+            public void onRightClick(View view) {
+                if(extendMenu.getVisibility() == View.GONE) {
+                    extendMenu.setVisibility(View.VISIBLE);
+                }else {
+                    extendMenu.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override

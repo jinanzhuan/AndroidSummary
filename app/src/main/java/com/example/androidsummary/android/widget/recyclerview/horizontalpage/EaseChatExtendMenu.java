@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -25,7 +26,7 @@ import java.util.List;
  * Extend menu when user want send image, voice clip, etc
  *
  */
-public class EaseChatExtendMenu extends RecyclerView {
+public class EaseChatExtendMenu extends RecyclerView implements PagingScrollHelper.onPageChangeListener {
     protected Context context;
     private List<ChatMenuItemModel> itemModels = new ArrayList<ChatMenuItemModel>();
     private ItemAdapter adapter;
@@ -59,17 +60,22 @@ public class EaseChatExtendMenu extends RecyclerView {
      */
     public void init(){
         HorizontalPageLayoutManager manager = new HorizontalPageLayoutManager(numRows, numColumns);
-        //manager.setItemDefaultHeight((int) CommonUtils.dip2px(context, 100));
+        manager.setItemHeight((int) CommonUtils.dip2px(context, 100));
         setLayoutManager(manager);
         setHasFixedSize(true);
         adapter = new ItemAdapter();
         setAdapter(adapter);
+        PagingItemDecoration pagingItemDecoration = new PagingItemDecoration(context, manager);
+        pagingItemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.divider_bg));
+        addItemDecoration(pagingItemDecoration);
 
         helper = new PagingScrollHelper();
         helper.setUpRecycleView(this);
         helper.updateLayoutManger();
         helper.scrollToPosition(0);
         setHorizontalFadingEdgeEnabled(true);
+
+        helper.setOnPageChangeListener(this);
     }
     
     /**
@@ -112,6 +118,11 @@ public class EaseChatExtendMenu extends RecyclerView {
         registerMenuItem(context.getString(nameRes), drawableRes, itemId, listener);
     }
 
+    @Override
+    public void onPageChange(int index) {
+        Log.e("TAG", "current index = "+index);
+    }
+
     private class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         private List<ChatMenuItemModel> data;
 
@@ -131,10 +142,6 @@ public class EaseChatExtendMenu extends RecyclerView {
         @Override
         public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
             ChatMenuItemModel model = data.get(position);
-            Log.e("TAG", "item = "+model+" position = "+position);
-            holder.itemView.post(()-> {
-                Log.e("TAG", "itemView's width = "+holder.itemView.getWidth() + " itemView's height = "+holder.itemView.getHeight());
-            });
             holder.imageView.setBackgroundResource(model.image);
             holder.textView.setText(model.name);
             holder.itemView.setOnClickListener(new OnClickListener() {

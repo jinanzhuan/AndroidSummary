@@ -3,7 +3,6 @@ package com.example.androidsummary.android.widget.recyclerview.horizontalpage;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 实现RecycleView分页滚动的工具类
- * Created by Sunny on 2019/4/1.
+ * 增加了判断，如果页面没有变动，则不调用{@link #mOnPageChangeListener}
  * 参考博文：https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
 public class PagingScrollHelper {
@@ -26,6 +25,7 @@ public class PagingScrollHelper {
     private MyOnTouchListener mOnTouchListener = new MyOnTouchListener();
     private boolean firstTouch = true;
     private onPageChangeListener mOnPageChangeListener;
+    private int lastPageIndex;
     private ORIENTATION mOrientation = ORIENTATION.HORIZONTAL;
 
     enum ORIENTATION {
@@ -166,9 +166,13 @@ public class PagingScrollHelper {
                 mAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        //回调监听
-                        if (null != mOnPageChangeListener) {
-                            mOnPageChangeListener.onPageChange(getPageIndex());
+                        int pageIndex = getPageIndex();
+                        if(lastPageIndex != pageIndex) {
+                            //回调监听
+                            if (null != mOnPageChangeListener) {
+                                mOnPageChangeListener.onPageChange(pageIndex);
+                            }
+                            lastPageIndex = pageIndex;
                         }
                         //修复双击item bug
                         mRecyclerView.stopScroll();
