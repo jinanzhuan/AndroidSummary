@@ -23,5 +23,13 @@ public class WidgetIndexActivity extends BaseTitleActivity {
     public void recyclerviewRelation(View view) {
         RecyclerViewIndexActivity.actionStart(mContext);
     }
+
+    public void viewpagerRelation(View view) {
+        MyViewPagerActivity.actionStart(mContext);
+    }
+
+    public void horizontalPage2(View view) {
+        HorizontalPageActivity.actionStart(mContext);
+    }
 }
 

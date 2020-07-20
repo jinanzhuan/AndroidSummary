@@ -22,6 +22,17 @@
             android:onClick="recyclerviewRelation"
             android:text="recyclerview"/>
 
+        <TextView
+            android:id="@+id/tv_viewpager"
+            style="@style/item_tv_style"
+            android:onClick="viewpagerRelation"
+            android:text="myviewpager"/>
+
+        <TextView
+            style="@style/item_tv_style"
+            android:onClick="horizontalPage2"
+            android:text="horizontalpage"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
