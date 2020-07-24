@@ -21,6 +21,12 @@
             android:onClick="horizontalPage"
             android:text="horizontalPage"/>
 
+        <TextView
+            android:id="@+id/tv_concat_adapter"
+            style="@style/item_tv_style"
+            android:onClick="concatAdapter"
+            android:text="ConcatAdapter"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

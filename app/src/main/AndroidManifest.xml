@@ -27,6 +27,7 @@
         <activity android:name=".android.widget.recyclerview.RecyclerViewIndexActivity" />
         <activity android:name=".android.widget.MyViewPagerActivity" />
         <activity android:name=".android.widget.HorizontalPageActivity" />
+        <activity android:name=".android.widget.recyclerview.contactAdapter.ContactAdapterActivity" />
     </application>
 
 </manifest>

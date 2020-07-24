@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.androidsummary.R;
+import com.example.androidsummary.android.widget.recyclerview.contactAdapter.ContactAdapterActivity;
 import com.example.androidsummary.base.BaseTitleActivity;
 
 public class RecyclerViewIndexActivity extends BaseTitleActivity {
@@ -21,6 +22,10 @@ public class RecyclerViewIndexActivity extends BaseTitleActivity {
 
     public void horizontalPage(View view) {
         HorizontalPageActivity.actionStart(mContext);
+    }
+
+    public void concatAdapter(View view) {
+        ContactAdapterActivity.actionStart(mContext);
     }
 }
 
