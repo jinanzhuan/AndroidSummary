@@ -45,17 +45,22 @@ public class ContactAdapterActivity extends BaseTitleActivity {
         headerData = new ArrayList<>();
         contentData = new ArrayList<>();
 
+        //设置为垂直线性布局
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         ConcatAdapter adapter = new ConcatAdapter();
         headerAdapter = new HeaderAdapter(headerData);
         contentAdapter = new ContentAdapter(contentData);
         footerAdapter = new FooterAdapter();
+        //添加不同的适配器
         adapter.addAdapter(headerAdapter);
         adapter.addAdapter(contentAdapter);
         adapter.addAdapter(footerAdapter);
+        //设置适配器
         rvList.setAdapter(adapter);
+        //添加DividerItemDecoration
         DividerItemDecoration decoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
         decoration.setDrawable(ContextCompat.getDrawable(mContext, R.drawable.divider_bg));
+        //设置itemDecoration
         rvList.addItemDecoration(decoration);
 
     }
@@ -64,7 +69,7 @@ public class ContactAdapterActivity extends BaseTitleActivity {
     protected void initData() {
         super.initData();
         HeaderBean header;
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 2; i++) {
             header = new HeaderBean();
             header.setName("header"+(i+1));
             headerData.add(header);
@@ -72,7 +77,7 @@ public class ContactAdapterActivity extends BaseTitleActivity {
         headerAdapter.notifyDataSetChanged();
 
         ContentBean content;
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 6; i++) {
             content = new ContentBean();
             content.setName("content"+(i+1));
             contentData.add(content);

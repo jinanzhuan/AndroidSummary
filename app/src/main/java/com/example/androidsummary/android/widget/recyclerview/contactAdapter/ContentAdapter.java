@@ -40,7 +40,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
                 int bindingAdapterPosition = holder.getBindingAdapterPosition();
                 Log.e("TAG", "absoluteAdapterPosition = "+absoluteAdapterPosition + " bindingAdapterPosition = "+bindingAdapterPosition);
                 if(onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, position);
+                    onItemClickListener.onItemClick(v, bindingAdapterPosition);
                 }
             }
         });
