@@ -26,6 +26,11 @@
                 android:onClick="glide_relation"
                 style="@style/item_tv_style" />
 
+            <TextView
+                android:text="EasyVideoPlayer"
+                android:onClick="easyVideoPlayer"
+                style="@style/item_tv_style" />
+
 
 
         </LinearLayout>
