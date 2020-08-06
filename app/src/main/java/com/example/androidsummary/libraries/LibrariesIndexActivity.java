@@ -7,6 +7,7 @@ import android.view.View;
 import com.example.androidsummary.R;
 import com.example.androidsummary.base.BaseTitleActivity;
 import com.example.androidsummary.libraries.Glide.GlideIndexActivity;
+import com.example.androidsummary.libraries.hx.EaseLoginActivity;
 import com.example.androidsummary.libraries.video.EasyVideoActivity;
 
 public class LibrariesIndexActivity extends BaseTitleActivity {
@@ -27,5 +28,9 @@ public class LibrariesIndexActivity extends BaseTitleActivity {
 
     public void easyVideoPlayer(View view) {
         EasyVideoActivity.actionStart(mContext);
+    }
+
+    public void easeHx(View view) {
+        EaseLoginActivity.actionStart(mContext);
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EasyVideoPlayer">
+
+        <attr name="evp_source" format="string" />
+
+        <attr name="evp_playDrawable" format="reference" />
+        <attr name="evp_pauseDrawable" format="reference" />
+
+        <attr name="evp_hideControlsOnPlay" format="boolean" />
+        <attr name="evp_autoPlay" format="boolean" />
+
+        <attr name="evp_disableControls" format="boolean" />
+
+        <attr name="evp_themeColor" format="color" />
+
+        <attr name="evp_autoFullscreen" format="boolean" />
+
+        <attr name="evp_loop" format="boolean" />
+
+    </declare-styleable>
+
+</resources>
