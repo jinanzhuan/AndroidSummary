@@ -33,6 +33,11 @@
             android:onClick="horizontalPage2"
             android:text="horizontalpage"/>
 
+        <TextView
+            style="@style/item_tv_style"
+            android:onClick="progressBar"
+            android:text="ProgressBar"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

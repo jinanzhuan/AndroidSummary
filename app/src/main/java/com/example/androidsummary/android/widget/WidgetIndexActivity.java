@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.androidsummary.R;
+import com.example.androidsummary.android.widget.progressbar.ProgressBarIndexActivity;
 import com.example.androidsummary.android.widget.recyclerview.RecyclerViewIndexActivity;
 import com.example.androidsummary.base.BaseTitleActivity;
 
@@ -30,6 +31,10 @@ public class WidgetIndexActivity extends BaseTitleActivity {
 
     public void horizontalPage2(View view) {
         HorizontalPageActivity.actionStart(mContext);
+    }
+
+    public void progressBar(View view) {
+        ProgressBarIndexActivity.actionStart(mContext);
     }
 }
 

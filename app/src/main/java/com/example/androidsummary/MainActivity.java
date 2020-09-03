@@ -1,6 +1,10 @@
 package com.example.androidsummary;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -26,6 +30,7 @@ public class MainActivity extends BaseTitleActivity {
     protected void initData() {
         super.initData();
         requestPermission();
+
     }
 
     private void requestPermission() {

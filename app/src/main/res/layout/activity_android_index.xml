@@ -24,4 +24,9 @@
         android:onClick="animationRelation"
         android:text="animation"/>
 
+    <TextView
+        style="@style/item_tv_style"
+        android:onClick="eventRelation"
+        android:text="event"/>
+
 </LinearLayout>

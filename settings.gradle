@@ -1,4 +1,2 @@
-include ':easyVideoPlayer'
 include ':app'
-include ':easeui'
 rootProject.name='AndroidSummary'
