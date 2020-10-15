@@ -50,6 +50,11 @@
         <activity android:name=".android.widget.recyclerview.contactAdapter.ContactAdapterActivity" />
         <activity android:name=".android.event.EventIndexActivity" />
         <activity android:name=".android.widget.progressbar.ProgressBarIndexActivity" />
+        <activity android:name=".android.animation.AnimationIndexActivity" />
+        <activity android:name=".android.animation.FrameAnimationActivity" />
+        <activity android:name=".android.animation.PropertyAnimationIndexActivity" />
+        <activity android:name=".android.animation.TweenAnimationIndexActivity" />
+        <activity android:name=".android.animation.RotateAnimationActivity" />
     </application>
 
 </manifest>

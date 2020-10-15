@@ -1,2 +1,3 @@
+include ':javatest'
 include ':app'
 rootProject.name='AndroidSummary'

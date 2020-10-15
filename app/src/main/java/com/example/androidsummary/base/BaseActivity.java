@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity extends AppCompatActivity {
     public BaseActivity mContext;
 
@@ -13,6 +15,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(getLayoutId());
+        ButterKnife.bind(this);
         initIntent();
         initView();
         initListener();

@@ -1,6 +1,8 @@
 package com.example.androidsummary.android.widget.progressbar;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +59,7 @@ public class ProgressBarIndexActivity extends BaseTitleActivity implements View.
         rv_list.setAdapter(adapter);
 
         List<String> names = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 10; i++) {
             names.add("position"+(i+1));
         }
 
@@ -68,7 +70,10 @@ public class ProgressBarIndexActivity extends BaseTitleActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_refresh :
-                adapter.notifyDataSetChanged();
+                int index = adapter.getItemCount() - 1;
+                adapter.getData().remove(index);
+                adapter.notifyItemRemoved(index);
+                adapter.notifyItemChanged(index+2);
                 break;
         }
     }
@@ -88,7 +93,19 @@ public class ProgressBarIndexActivity extends BaseTitleActivity implements View.
         @Override
         public void onBindViewHolder(@NonNull ProgressBarAdapter.ViewHolder holder, int position) {
             Log.e("TAG", "position = " + position + " view = "+holder.itemView);
-            holder.tv_name.setText(mData.get(position));
+            String content = mData.get(position);
+            if(content.contains((position + 1)+"")) {
+                holder.tv_name.setText(content);
+            }else {
+                holder.tv_name.setText("我不一样了");
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDeleteDialog(holder.getBindingAdapterPosition());
+                }
+            });
         }
 
         @Override
@@ -99,6 +116,10 @@ public class ProgressBarIndexActivity extends BaseTitleActivity implements View.
         public void setData(List<String> data) {
             this.mData = data;
             notifyDataSetChanged();
+        }
+
+        public List<String> getData() {
+            return this.mData;
         }
 
         public void notifyData() {
@@ -116,6 +137,21 @@ public class ProgressBarIndexActivity extends BaseTitleActivity implements View.
             }
 
         }
+    }
+
+    private void showDeleteDialog(int position) {
+        new AlertDialog.Builder(mContext)
+                    .setTitle("删除")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            adapter.getData().remove(position);
+                            adapter.notifyItemRemoved(position);
+                            adapter.notifyItemChanged(position);
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .show();
     }
 }
 
