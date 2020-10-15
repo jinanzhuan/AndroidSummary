@@ -27,5 +27,9 @@ public class RecyclerViewIndexActivity extends BaseTitleActivity {
     public void concatAdapter(View view) {
         ContactAdapterActivity.actionStart(mContext);
     }
+
+    public void gridEmpty(View view) {
+        GridLayoutManagerActivity.actionStart(mContext);
+    }
 }
 

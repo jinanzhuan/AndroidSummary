@@ -27,6 +27,12 @@
             android:onClick="concatAdapter"
             android:text="ConcatAdapter"/>
 
+        <TextView
+            android:id="@+id/tv_grid_empty_adapter"
+            style="@style/item_tv_style"
+            android:onClick="gridEmpty"
+            android:text="GridEmpty"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
