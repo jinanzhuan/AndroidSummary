@@ -38,6 +38,11 @@
             android:onClick="progressBar"
             android:text="ProgressBar"/>
 
+        <TextView
+            style="@style/item_tv_style"
+            android:onClick="viewComponent"
+            android:text="ViewComponent"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

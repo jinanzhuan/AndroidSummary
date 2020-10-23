@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.androidsummary.android.widget.viewcomponent.DualPaneContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container"
+    android:orientation="horizontal">
+
+    <com.example.androidsummary.android.widget.viewcomponent.ItemListView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
+
+    <include layout="@layout/detail"
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_height="match_parent"/>
+
+</com.example.androidsummary.android.widget.viewcomponent.DualPaneContainer>

@@ -56,6 +56,7 @@
         <activity android:name=".android.animation.TweenAnimationIndexActivity" />
         <activity android:name=".android.animation.RotateAnimationActivity" />
         <activity android:name=".android.widget.recyclerview.GridLayoutManagerActivity" />
+        <activity android:name=".android.widget.viewcomponent.ViewComponentActivity" />
     </application>
 
 </manifest>
