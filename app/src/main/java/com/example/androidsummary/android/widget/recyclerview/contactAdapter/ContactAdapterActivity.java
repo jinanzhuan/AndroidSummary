@@ -3,6 +3,7 @@ package com.example.androidsummary.android.widget.recyclerview.contactAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -18,13 +19,17 @@ import com.example.androidsummary.common.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactAdapterActivity extends BaseTitleActivity {
+public class ContactAdapterActivity extends BaseTitleActivity implements View.OnClickListener {
     private RecyclerView rvList;
+    private Button btn_add;
+    private Button btn_remove;
     private List<HeaderBean> headerData;
     private List<ContentBean> contentData;
     private HeaderAdapter headerAdapter;
     private ContentAdapter contentAdapter;
     private FooterAdapter footerAdapter;
+    private ConcatAdapter adapter;
+    private DividerItemDecoration decoration;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, ContactAdapterActivity.class);
@@ -41,13 +46,15 @@ public class ContactAdapterActivity extends BaseTitleActivity {
         super.initView();
         title_bar = findViewById(R.id.title_bar);
         rvList = findViewById(R.id.rv_list);
+        btn_add = findViewById(R.id.btn_add);
+        btn_remove = findViewById(R.id.btn_remove);
 
         headerData = new ArrayList<>();
         contentData = new ArrayList<>();
 
         //设置为垂直线性布局
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
-        ConcatAdapter adapter = new ConcatAdapter();
+        adapter = new ConcatAdapter();
         headerAdapter = new HeaderAdapter(headerData);
         contentAdapter = new ContentAdapter(contentData);
         footerAdapter = new FooterAdapter();
@@ -58,11 +65,18 @@ public class ContactAdapterActivity extends BaseTitleActivity {
         //设置适配器
         rvList.setAdapter(adapter);
         //添加DividerItemDecoration
-        DividerItemDecoration decoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
+        decoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
         decoration.setDrawable(ContextCompat.getDrawable(mContext, R.drawable.divider_bg));
         //设置itemDecoration
         rvList.addItemDecoration(decoration);
 
+    }
+
+    @Override
+    protected void initListener() {
+        super.initListener();
+        btn_add.setOnClickListener(this);
+        btn_remove.setOnClickListener(this);
     }
 
     @Override
@@ -104,6 +118,18 @@ public class ContactAdapterActivity extends BaseTitleActivity {
                 Toast.makeText(ContactAdapterActivity.this, "footer position = "+position, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add :
+                rvList.addItemDecoration(decoration);
+                break;
+            case R.id.btn_remove :
+                rvList.removeItemDecoration(decoration);
+                break;
+        }
     }
 }
 

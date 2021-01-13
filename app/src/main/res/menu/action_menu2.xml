@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_another_agree"
+        android:orderInCategory="100"
+        android:visible="true"
+        android:title="同意"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_another_refuse"
+        android:orderInCategory="100"
+        android:visible="true"
+        android:title="拒绝"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_another_delete"
+        android:orderInCategory="100"
+        android:visible="true"
+        android:title="删除"
+        app:showAsAction="ifRoom"/>
+</menu>

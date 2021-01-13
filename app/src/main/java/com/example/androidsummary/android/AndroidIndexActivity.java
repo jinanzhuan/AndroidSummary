@@ -7,6 +7,7 @@ import android.view.View;
 import com.example.androidsummary.R;
 import com.example.androidsummary.android.animation.AnimationIndexActivity;
 import com.example.androidsummary.android.event.EventIndexActivity;
+import com.example.androidsummary.android.menu.MenuIndexActivity;
 import com.example.androidsummary.android.widget.WidgetIndexActivity;
 import com.example.androidsummary.base.BaseTitleActivity;
 
@@ -32,6 +33,10 @@ public class AndroidIndexActivity extends BaseTitleActivity {
 
     public void eventRelation(View view) {
         EventIndexActivity.actionStart(mContext);
+    }
+
+    public void menuRelation(View view) {
+        MenuIndexActivity.actionStart(mContext);
     }
 }
 

@@ -29,4 +29,9 @@
         android:onClick="eventRelation"
         android:text="event"/>
 
+    <TextView
+        style="@style/item_tv_style"
+        android:onClick="menuRelation"
+        android:text="Menu"/>
+
 </LinearLayout>

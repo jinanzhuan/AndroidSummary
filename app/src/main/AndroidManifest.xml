@@ -57,6 +57,8 @@
         <activity android:name=".android.animation.RotateAnimationActivity" />
         <activity android:name=".android.widget.recyclerview.GridLayoutManagerActivity" />
         <activity android:name=".android.widget.viewcomponent.ViewComponentActivity" />
+        <activity android:name=".android.menu.MenuIndexActivity" />
+        <activity android:name=".android.menu.PopupMenuActivity" />
     </application>
 
 </manifest>
