@@ -33,6 +33,11 @@
             android:onClick="gridEmpty"
             android:text="GridEmpty"/>
 
+        <TextView
+            style="@style/item_tv_style"
+            android:onClick="stackFromEnd"
+            android:text="stackFromEnd"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

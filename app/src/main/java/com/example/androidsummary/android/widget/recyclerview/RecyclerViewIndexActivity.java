@@ -31,5 +31,9 @@ public class RecyclerViewIndexActivity extends BaseTitleActivity {
     public void gridEmpty(View view) {
         GridLayoutManagerActivity.actionStart(mContext);
     }
+
+    public void stackFromEnd(View view) {
+        StackFromEndActivity.actionStart(mContext);
+    }
 }
 

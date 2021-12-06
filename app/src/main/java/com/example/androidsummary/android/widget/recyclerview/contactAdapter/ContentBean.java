@@ -2,6 +2,7 @@ package com.example.androidsummary.android.widget.recyclerview.contactAdapter;
 
 public class ContentBean {
     private String name;
+    private String url;
 
     public String getName() {
         return name;
@@ -9,6 +10,14 @@ public class ContentBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
 
