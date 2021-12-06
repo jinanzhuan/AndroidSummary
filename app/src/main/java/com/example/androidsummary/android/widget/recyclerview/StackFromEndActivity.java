@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,11 +110,11 @@ public class StackFromEndActivity extends BaseTitleActivity implements View.OnCl
 
         //设置为垂直线性布局
         layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setStackFromEnd(true);
 
         rvList.setLayoutManager(layoutManager);
-        contentAdapter = new StackFromEndAdapter(contentData);
-        
+        contentAdapter = new StackFromEndAdapter();
+
+        ConcatAdapter adapter = new ConcatAdapter();
         contentAdapter.setGlideLoadListener(new GlideLoadListener() {
             @Override
             public void onResourceReady(int position) {
@@ -126,8 +127,9 @@ public class StackFromEndActivity extends BaseTitleActivity implements View.OnCl
                 Log.e("TAG", "onLoadFailed");
             }
         });
+        adapter.addAdapter(contentAdapter);
         //设置适配器
-        rvList.setAdapter(contentAdapter);
+        rvList.setAdapter(adapter);
         //添加DividerItemDecoration
         decoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
         decoration.setDrawable(ContextCompat.getDrawable(mContext, R.drawable.divider_bg));
@@ -162,7 +164,10 @@ public class StackFromEndActivity extends BaseTitleActivity implements View.OnCl
         }
         ContentBean contentBean = contentData.get(contentData.size() - 1);
         contentBean.setName(longItemContent);
-        contentAdapter.notifyDataSetChanged();
+        if(!layoutManager.getStackFromEnd()) {
+            layoutManager.setStackFromEnd(true);
+        }
+        contentAdapter.setData(contentData);
         if(srl_refresh != null) {
             srl_refresh.setRefreshing(false);
         }
@@ -199,8 +204,8 @@ public class StackFromEndActivity extends BaseTitleActivity implements View.OnCl
             }
             contentData.add(content);
         }
-        contentAdapter.notifyItemRangeChanged(contentData.size(), 1);
-        //contentAdapter.notifyDataSetChanged();
+        //contentAdapter.notifyItemRangeChanged(contentData.size(), 1);
+        contentAdapter.notifyDataSetChanged();
         seekToLastPosition();
     }
 
