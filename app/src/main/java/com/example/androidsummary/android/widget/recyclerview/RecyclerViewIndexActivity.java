@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.androidsummary.R;
+import com.example.androidsummary.android.widget.recyclerview.chat.ChatActivity;
 import com.example.androidsummary.android.widget.recyclerview.contactAdapter.ContactAdapterActivity;
 import com.example.androidsummary.base.BaseTitleActivity;
 
@@ -34,6 +35,10 @@ public class RecyclerViewIndexActivity extends BaseTitleActivity {
 
     public void stackFromEnd(View view) {
         StackFromEndActivity.actionStart(mContext);
+    }
+
+    public void simpleChat(View view) {
+        ChatActivity.actionStart(mContext);
     }
 }
 

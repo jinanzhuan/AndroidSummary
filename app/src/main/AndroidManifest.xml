@@ -60,6 +60,7 @@
         <activity android:name=".android.menu.MenuIndexActivity" />
         <activity android:name=".android.menu.PopupMenuActivity" />
         <activity android:name=".android.widget.recyclerview.StackFromEndActivity" />
+        <activity android:name=".android.widget.recyclerview.chat.ChatActivity" />
     </application>
 
 </manifest>

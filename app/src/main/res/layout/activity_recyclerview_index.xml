@@ -38,6 +38,11 @@
             android:onClick="stackFromEnd"
             android:text="stackFromEnd"/>
 
+        <TextView
+            style="@style/item_tv_style"
+            android:onClick="simpleChat"
+            android:text="simpleChat"/>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
